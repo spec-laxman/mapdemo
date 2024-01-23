@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Current Location Every 5 Seconds</title>
+</head>
+<body>
+
+<script>
+    function getLocation() {
+        // Check if the browser supports geolocation
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+        }
+    }
+
+    function successCallback(position) {
+        // Get latitude and longitude from the position object
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        var dataToSend = {
+            latitude: latitude,
+            longitude: longitude
+            // Add more key-value pairs as needed
+        };
+        makePostRequest(latitude,longitude);
+        // Display the coordinates
+        console.log("Latitude: " + latitude);
+        console.log("Longitude: " + longitude);
+        
+        // You can use these values as needed, for example, update a map, send to a server, etc.
+    }
+
+    function makePostRequest(latitude,longitude) {
+        // Create a new XMLHttpRequest object
+        var xhr = new XMLHttpRequest();
+
+        // Define the request method, URL, and set it to be asynchronous
+        xhr.open("POST", "saveclient.php", true);
+
+        // Set the request header to indicate the content type
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        // Create a JavaScript object representing the data to be sent
+        var dataToSend = {
+            latitude: latitude,
+            longitude : longitude
+            // Add more key-value pairs as needed
+        };
+
+        // Convert the JavaScript object to a JSON string
+        var jsonData = JSON.stringify(dataToSend);
+
+        // Set up the event handler to handle the response
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    // Request was successful, handle the response here
+                    console.log("Response: " + xhr.responseText);
+                } else {
+                    // Request failed, handle the error here
+                    console.error("Error: " + xhr.status);
+                }
+            }
+        };
+
+        // Send the request with the JSON data in the request body
+        xhr.send(jsonData);
+    }
+
+    function errorCallback(error) {
+        switch(error.code) {
+            case error.PERMISSION_DENIED:
+                console.log("User denied the request for Geolocation.");
+                break;
+            case error.POSITION_UNAVAILABLE:
+                console.log("Location information is unavailable.");
+                break;
+            case error.TIMEOUT:
+                console.log("The request to get user location timed out.");
+                break;
+            case error.UNKNOWN_ERROR:
+                console.log("An unknown error occurred.");
+                break;
+        }
+    }
+
+    // Get location every 5 seconds
+    setInterval(getLocation, 5000);
+</script>
+
+</body>
+</html>
