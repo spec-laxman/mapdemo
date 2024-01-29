@@ -3,7 +3,7 @@
 <head>
     <title>Live Vehicle Location</title>
     <!-- Replace YOUR_GOOGLE_MAPS_API_KEY with your actual API key -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDdDpqzUuoctPawAqeIi1uCsOJwrgo5m78&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=yourAPIKey&libraries=places"></script>
     <style>
         #map {
             height: 400px;
